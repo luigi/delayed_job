@@ -25,14 +25,15 @@ module Delayed
         key :handler,     String
         key :run_at,      Time
         key :locked_at,   Time
-        key :locked_by,   String, :index => true
+        key :locked_by,   String
         key :failed_at,   Time
         key :last_error,  String
         timestamps!
         
         before_save :set_default_run_at
 
-        ensure_index [[:priority, 1], [:run_at, 1]]
+        ensure_index :priority
+        ensure_index :run_at
         
         def self.before_fork
           ::MongoMapper.connection.close
